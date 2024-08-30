@@ -2,6 +2,8 @@ package com.project.crm.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -72,4 +74,9 @@ public class User {
 	protected void onUpdate() {
 		this.updatedAt = LocalDateTime.now();
 	}
+
+	public Set<Role> getRoles() {
+		return this.userRoles.stream().map(UserRole::getRole).collect(Collectors.toSet());
+	}
+
 }

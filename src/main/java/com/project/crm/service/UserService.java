@@ -3,6 +3,8 @@ package com.project.crm.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.project.crm.dto.LoginDto;
+import com.project.crm.dto.SignupDto;
 import com.project.crm.dto.UserDTO;
 import com.project.crm.entity.User;
 
@@ -32,4 +34,15 @@ public interface UserService {
 	UserDTO updateUser(Long id, UserDTO userDTO);
 
 	void deleteUser(Long id);
+
+	String login(LoginDto loginDto);
+
+	void signup(SignupDto signupDto);
+
+	void signupAndAssignRole(SignupDto signupDto, String roleName);
+
+	boolean isUserExist(String username);
+
+	public User getOneUserById(Long userId);
+
 }

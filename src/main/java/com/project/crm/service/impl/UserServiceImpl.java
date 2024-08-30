@@ -1,5 +1,6 @@
 package com.project.crm.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.crm.dto.LoginDto;
+import com.project.crm.dto.SignupDto;
 import com.project.crm.dto.UserDTO;
 import com.project.crm.entity.User;
 import com.project.crm.repository.UserRepository;
@@ -93,4 +96,62 @@ public class UserServiceImpl implements UserService {
 	public void deleteUser(Long id) {
 		userRepository.deleteById(id);
 	}
+
+	@Override
+	public void signup(SignupDto signupDto) {
+		if (isUserExist(signupDto.getUsername())) {
+			throw new RuntimeException("User already exists!");
+		}
+
+		User user = new User();
+		user.setName(signupDto.getName());
+		user.setUsername(signupDto.getUsername());
+		user.setEmail(signupDto.getEmail());
+		user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
+
+		Role userRole = roleRepository.findByName("USER");
+		Set<Role> roles = new HashSet<>();
+		roles.add(userRole);
+		user.setRoles(roles);
+
+		userRepository.save(user);
+	}
+
+	@Override
+	public void signupAndAssignRole(SignupDto signupDto, String roleName) {
+		User user = new User();
+		user.setName(signupDto.getName());
+		user.setUsername(signupDto.getUsername());
+		user.setEmail(signupDto.getEmail());
+		user.setPasswordReminder(signupDto.getPasswordReminder());
+		user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
+
+		Role userRole = roleRepository.findByName(roleName);
+		if (userRole == null) {
+			throw new RuntimeException("Role not found: " + roleName);
+		}
+
+		Set<Role> roles = new HashSet<>();
+		roles.add(userRole);
+		user.setRoles(roles);
+
+		userRepository.save(user);
+	}
+
+	@Override
+	public boolean isUserExist(String username) {
+		return userRepository.existsByUsername(username);
+	}
+
+	@Override
+	public User getOneUserById(Long userId) {
+		return userRepository.findById(userId).orElse(null);
+	}
+
+	@Override
+	public String login(LoginDto loginDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

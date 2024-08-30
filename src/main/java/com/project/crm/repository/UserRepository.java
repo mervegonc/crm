@@ -22,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	List<User> findByOrderByLastLoginAtDesc();
 
 	List<User> findByCompanyCompanyCode(String companyCode);
+
+	boolean existsByUsername(String username);
 }

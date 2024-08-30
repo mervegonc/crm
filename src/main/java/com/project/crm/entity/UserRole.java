@@ -35,4 +35,9 @@ public class UserRole {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public Role getRole() {
+		return this.role;
+	}
+
 }
