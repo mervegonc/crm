@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String login(LoginDto loginDto) {
-		User user = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail())
+		User user = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), null)
 				.orElseThrow(() -> new UsernameNotFoundException("Invalid username or password"));
 
 		if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Long getUserIdByUsername(String usernameOrEmail) {
-		User user = userRepository.findByUsernameOrEmail(usernameOrEmail)
+		User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		return user.getId();
 	}
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findByUsernameOrEmail(String usernameOrEmail) {
-		return userRepository.findByUsernameOrEmail(usernameOrEmail).orElse(null);
+		return userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail).orElse(null);
 	}
 
 	@Override
