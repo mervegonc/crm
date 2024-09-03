@@ -1,5 +1,6 @@
 package com.project.crm.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,4 +30,8 @@ public interface CampaignService {
 	Campaign save(Campaign campaign);
 
 	void deleteById(Long id);
+
+	List<Campaign> getActiveCampaigns();
+
+	List<Campaign> getActiveCampaigns(LocalDate startDate, LocalDate endDate);
 }

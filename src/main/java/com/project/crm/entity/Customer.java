@@ -42,6 +42,9 @@ public class Customer {
 	@Column(name = "address")
 	private String address;
 
+	@Column(name = "segment") // Add this line
+	private String segment; // Add this line
+
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Order> orders;
 
@@ -56,4 +59,7 @@ public class Customer {
 
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
+
+	@Column(name = "active")
+	private boolean active;
 }

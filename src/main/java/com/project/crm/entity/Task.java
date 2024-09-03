@@ -38,6 +38,9 @@ public class Task {
 	@JoinColumn(name = "assigned_to", nullable = false)
 	private User assignedTo;
 
+	@Column(name = "priority")
+	private Integer priority;
+
 	@Column(name = "due_date", nullable = false)
 	private LocalDateTime dueDate;
 
@@ -49,6 +52,9 @@ public class Task {
 
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
+
+	@Column(name = "completed_at")
+	private LocalDateTime completedAt; // Add this line
 
 	@PrePersist
 	protected void onCreate() {

@@ -1,5 +1,6 @@
 package com.project.crm.service.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +17,18 @@ import com.project.crm.service.CampaignService;
 @Service
 public class CampaignServiceImpl implements CampaignService {
 
+	private final CampaignRepository campaignRepository;
+
 	@Autowired
-	private CampaignRepository campaignRepository;
+	public CampaignServiceImpl(CampaignRepository campaignRepository) {
+		this.campaignRepository = campaignRepository;
+	}
+
+	@Override
+	public List<Campaign> getActiveCampaigns(LocalDate startDate, LocalDate endDate) {
+		return campaignRepository.findByStartDateBeforeAndEndDateAfter(startDate.atStartOfDay(),
+				endDate.atTime(23, 59, 59));
+	}
 
 	@Override
 	public Optional<Campaign> findById(Long id) {
@@ -84,7 +95,7 @@ public class CampaignServiceImpl implements CampaignService {
 
 	@Override
 	public List<Campaign> findActiveCampaigns() {
-		return campaignRepository.findByStartDateBeforeAndEndDateAfter(LocalDateTime.now());
+		return campaignRepository.findByStartDateBeforeAndEndDateAfter(LocalDateTime.now(), LocalDateTime.MAX);
 	}
 
 	@Override
@@ -95,5 +106,10 @@ public class CampaignServiceImpl implements CampaignService {
 	@Override
 	public void deleteById(Long id) {
 		campaignRepository.deleteById(id);
+	}
+
+	@Override
+	public List<Campaign> getActiveCampaigns() {
+		return campaignRepository.findByStartDateBeforeAndEndDateAfter(LocalDateTime.now(), LocalDateTime.MAX);
 	}
 }

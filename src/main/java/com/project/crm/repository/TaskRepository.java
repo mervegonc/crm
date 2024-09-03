@@ -13,6 +13,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
 	List<Task> findByAssignedToId(Long userId);
 
+	List<Task> findByDueDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+
 	List<Task> findByStatus(String status);
 
 	List<Task> findByOrderByDueDateAsc();
@@ -21,5 +23,4 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
 	List<Task> findByCompletedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 
-	List<Task> findByDueDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 }

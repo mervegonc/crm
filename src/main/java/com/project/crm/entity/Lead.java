@@ -28,6 +28,9 @@ public class Lead {
 	@Column(name = "first_name", nullable = false)
 	private String firstName;
 
+	@Column(name = "campaign_id")
+	private Long campaignId;
+
 	@Column(name = "last_name", nullable = false)
 	private String lastName;
 

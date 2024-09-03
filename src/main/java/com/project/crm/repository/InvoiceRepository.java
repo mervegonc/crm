@@ -18,7 +18,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
 	List<Invoice> findByOrderByDueDateAsc();
 
-	List<Invoice> findByCustomerId(Long customerId);
+	// Bu metodun kaldırılması gerekiyor
+	// List<Invoice> findByCustomerId(Long customerId);
 
 	List<Invoice> findByInvoiceDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 

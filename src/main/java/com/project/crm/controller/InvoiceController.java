@@ -16,12 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.crm.dto.InvoiceDTO;
 import com.project.crm.service.InvoiceService;
 
+import jakarta.persistence.Column;
+
 @RestController
 @RequestMapping("/api/invoices")
 public class InvoiceController {
 
 	@Autowired
 	private InvoiceService invoiceService;
+
+	@Column(name = "customer_id")
+	private Long customerId;
 
 	// Tüm faturaları listele
 	@GetMapping

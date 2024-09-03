@@ -32,8 +32,8 @@ public class Order {
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_id", nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "product_id")
 	private Product product;
 
 	@Column(name = "quantity", nullable = false)

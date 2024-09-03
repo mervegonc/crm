@@ -12,15 +12,11 @@ import com.project.crm.entity.Campaign;
 @Repository
 public interface CampaignRepository extends JpaRepository<Campaign, Long> {
 
-	Optional<Campaign> findByName(String name);
-
-	List<Campaign> findByStartDateBeforeAndEndDateAfter(LocalDateTime currentTime, LocalDateTime comparisonTime);
+	List<Campaign> findByStartDateBeforeAndEndDateAfter(LocalDateTime startDate, LocalDateTime endDate);
 
 	List<Campaign> findBySuccessfulTrue();
 
-	List<Campaign> findByOrderByTargetAudienceSizeDesc();
-
-	List<Campaign> findByStartDateBeforeAndEndDateAfter(LocalDateTime now);
+	Optional<Campaign> findByName(String name);
 
 	List<Campaign> findByStartDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 

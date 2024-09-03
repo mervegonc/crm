@@ -14,11 +14,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Optional<Product> findByName(String name);
 
+	List<Product> findByStockGreaterThan(Integer stock);
+
 	List<Product> findByPriceBetween(Double minPrice, Double maxPrice);
 
 	List<Product> findByActiveTrue();
-
-	List<Product> findByStockGreaterThan(Integer stockThreshold);
 
 	List<Product> findByOrderByCreatedAtDesc();
 

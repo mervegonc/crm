@@ -36,6 +36,12 @@ public class Product {
 	@Column(name = "price", nullable = false)
 	private Double price;
 
+	@Column(name = "stock")
+	private Integer stock;
+
+	@Column(name = "active")
+	private Boolean active;
+
 	@ManyToMany(mappedBy = "products")
 	private List<Campaign> campaigns;
 

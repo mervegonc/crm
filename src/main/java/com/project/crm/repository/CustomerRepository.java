@@ -18,7 +18,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 	Optional<Customer> findByFirstNameAndLastName(String firstName, String lastName);
 
-	List<Customer> findByActiveTrue();
+	List<Customer> findByActiveTrue(); // Bu metod artık geçerli olacak
 
 	List<Customer> findBySegment(String segment);
 
