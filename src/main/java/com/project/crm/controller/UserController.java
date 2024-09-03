@@ -26,7 +26,7 @@ public class UserController {
 	// Tüm kullanıcıları listele
 	@GetMapping
 	public ResponseEntity<List<UserDTO>> getAllUsers() {
-		List<UserDTO> users = userService.getAllUsers();
+		List<UserDTO> users = userService.getAllUser();
 		return ResponseEntity.ok(users);
 	}
 

@@ -47,14 +47,14 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<ProductDTO> getAllProducts() {
 		return productRepository.findAll().stream()
-				.map(product -> new ProductDTO(product.getId(), product.getName(), product.getPrice()))
+				.map(product -> new ProductDTO(product.getId(), product.getName(), null, product.getPrice()))
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public ProductDTO getProductById(Long id) {
 		Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
-		return new ProductDTO(product.getId(), product.getName(), product.getPrice());
+		return new ProductDTO(product.getId(), product.getName(), null, product.getPrice());
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
 		product.setName(productDTO.getName());
 		product.setPrice(productDTO.getPrice());
 		Product savedProduct = productRepository.save(product);
-		return new ProductDTO(savedProduct.getId(), savedProduct.getName(), savedProduct.getPrice());
+		return new ProductDTO(savedProduct.getId(), savedProduct.getName(), null, savedProduct.getPrice());
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
 		product.setName(productDTO.getName());
 		product.setPrice(productDTO.getPrice());
 		Product updatedProduct = productRepository.save(product);
-		return new ProductDTO(updatedProduct.getId(), updatedProduct.getName(), updatedProduct.getPrice());
+		return new ProductDTO(updatedProduct.getId(), updatedProduct.getName(), null, updatedProduct.getPrice());
 	}
 
 	@Override

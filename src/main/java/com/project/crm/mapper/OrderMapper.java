@@ -19,7 +19,7 @@ public class OrderMapper {
 
 	public OrderDTO toDTO(Order order) {
 		return new OrderDTO(order.getId(), order.getProduct().getName(), // Ürünün ismi alınıyor
-				order.getQuantity(), order.getTotalPrice());
+				order.getQuantity(), order.getTotalPrice(), null, 0, null);
 	}
 
 	public Order toEntity(OrderDTO orderDTO) {

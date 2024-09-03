@@ -31,7 +31,6 @@ public class AuthController {
 	@PostMapping("/signin")
 	public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto) {
 		String token = userService.login(loginDto);
-		System.out.println(loginDto.getPassword());
 		Long userId = userService.getUserIdByUsername(loginDto.getUsernameOrEmail());
 		JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
 		jwtAuthResponse.setAccessToken(token);
@@ -58,23 +57,18 @@ public class AuthController {
 
 	@PostMapping("/forgotpassword")
 	public ResponseEntity<GenericResponse> forgotPassword(@RequestBody PasswordResetRequest request) {
-		// Kullanıcı adı veya e-posta ile kullanıcıyı bul
 		User user = userService.findByUsernameOrEmail(request.getUsernameOrEmail());
 
-		// Kullanıcı bulunamazsa hata döndür
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found");
 		}
 
-		// Şifre hatırlatma bilgisini kontrol et
 		if (!user.getPasswordReminder().equals(request.getPasswordReminder())) {
 			return new ResponseEntity<>(new GenericResponse("Incorrect password reminder"), HttpStatus.BAD_REQUEST);
 		}
 
-		// Kullanıcının girdiği yeni şifreyi kullanarak şifreyi sıfırla
 		userService.resetPassword(user, request.getPassword());
 
 		return new ResponseEntity<>(new GenericResponse("Password reset successfully"), HttpStatus.OK);
 	}
-
 }

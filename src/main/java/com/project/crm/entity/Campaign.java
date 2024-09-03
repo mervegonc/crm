@@ -55,6 +55,9 @@ public class Campaign {
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 
+	@Column(name = "active", nullable = false)
+	private boolean active; // Add this field
+
 	@PrePersist
 	protected void onCreate() {
 		this.createdAt = LocalDateTime.now();
@@ -63,5 +66,14 @@ public class Campaign {
 	@PreUpdate
 	protected void onUpdate() {
 		this.updatedAt = LocalDateTime.now();
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	// Setter for 'active' field
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 }

@@ -2,8 +2,11 @@ package com.project.crm.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -64,6 +67,21 @@ public class User {
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 
+	@JsonIgnore
+	@Column(nullable = true, unique = true)
+	private String passwordReminder;
+
+	@Column(name = "last_login_at")
+	private LocalDateTime lastLoginAt;
+
+	public LocalDateTime getLastLoginAt() {
+		return lastLoginAt;
+	}
+
+	public void setLastLoginAt(LocalDateTime lastLoginAt) {
+		this.lastLoginAt = lastLoginAt;
+	}
+
 	@PrePersist
 	protected void onCreate() {
 		this.createdAt = LocalDateTime.now();
@@ -75,8 +93,12 @@ public class User {
 		this.updatedAt = LocalDateTime.now();
 	}
 
+	public void setRoles(Optional<Set<Role>> roles) {
+		this.userRoles = roles.orElse(Set.of()).stream().map(role -> new UserRole(this, role))
+				.collect(Collectors.toList());
+	}
+
 	public Set<Role> getRoles() {
 		return this.userRoles.stream().map(UserRole::getRole).collect(Collectors.toSet());
 	}
-
 }

@@ -14,7 +14,7 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
 
 	Optional<Campaign> findByName(String name);
 
-	List<Campaign> findByStartDateBeforeAndEndDateAfter(LocalDateTime now, LocalDateTime now);
+	List<Campaign> findByStartDateBeforeAndEndDateAfter(LocalDateTime currentTime, LocalDateTime comparisonTime);
 
 	List<Campaign> findBySuccessfulTrue();
 

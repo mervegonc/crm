@@ -31,6 +31,11 @@ public class UserRole {
 	@JoinColumn(name = "role_id", nullable = false)
 	private Role role;
 
+	public UserRole(User user, Role role) {
+		this.user = user;
+		this.role = role;
+	}
+
 	public String getName() {
 		// TODO Auto-generated method stub
 		return null;
@@ -39,5 +44,4 @@ public class UserRole {
 	public Role getRole() {
 		return this.role;
 	}
-
 }
