@@ -43,13 +43,28 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String login(LoginDto loginDto) {
-		User user = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), null)
-				.orElseThrow(() -> new UsernameNotFoundException("Invalid username or password"));
+		// Check if the user exists by username or email
+		Optional<User> userOptional = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(),
+				loginDto.getUsernameOrEmail());
 
-		if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-			throw new UsernameNotFoundException("Invalid username or password");
+		// If the user doesn't exist
+		if (userOptional.isEmpty()) {
+			if (loginDto.getUsernameOrEmail().contains("@")) {
+				throw new UsernameNotFoundException("This email doesn't exist, please sign up first.");
+			} else {
+				throw new UsernameNotFoundException("This username doesn't exist, please sign up first.");
+			}
 		}
 
+		// Get the user from the optional
+		User user = userOptional.get();
+
+		// If the password is incorrect
+		if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+			throw new UsernameNotFoundException("Please enter the correct email or username.");
+		}
+
+		// If everything is correct, authenticate and generate a token
 		Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null,
 				user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName()))
 						.collect(Collectors.toList()));

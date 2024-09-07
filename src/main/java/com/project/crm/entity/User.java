@@ -49,7 +49,7 @@ public class User {
 	private boolean active;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "company_id", nullable = false)
+	@JoinColumn(name = "company_id", nullable = true)
 	private Company company;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
