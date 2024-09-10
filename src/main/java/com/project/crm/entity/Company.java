@@ -1,12 +1,23 @@
 package com.project.crm.entity;
 
-import jakarta.persistence.*;
+import java.util.List;
+import java.util.UUID;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "companies")
@@ -15,32 +26,35 @@ import java.util.List;
 @AllArgsConstructor
 public class Company {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+	@Column(name = "name", nullable = false)
+	private String name;
 
-    @Column(name = "company_code", nullable = false, unique = true)
-    private String companyCode;
+	@Column(name = "phone_number")
+	private String phoneNumber;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> users;
+	@Column(name = "address")
+	private String address;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+	private List<Employee> employees;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+	private List<Department> departments;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "financial_info_id", referencedColumnName = "id")
+	private FinancialInfo financialInfo;
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+	@ManyToOne
+	@JoinColumn(name = "status_id")
+	private Status status;
+
+	@PrePersist
+	public void prePersist() {
+		this.id = UUID.randomUUID();
+	}
 }
