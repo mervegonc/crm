@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,8 +33,8 @@ public class Task {
 	@Column(name = "description")
 	private String description;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "assigned_to", nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "assigned_to_uuid", referencedColumnName = "uuid")
 	private User assignedTo;
 
 	@Column(name = "priority")

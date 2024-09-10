@@ -3,6 +3,7 @@ package com.project.crm.service.impl;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -42,12 +43,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userRepository.save(newUser);
 	}
 
-	public User getOneUserById(Long userId) {
-		return userRepository.findById(userId).orElse(null);
+	public User getOneUserById(UUID userUuid) {
+		return userRepository.findById(userUuid).orElse(null);
 	}
 
-	public User updateOneUser(Long userId, User newUser) {
-		Optional<User> user = userRepository.findById(userId);
+	public User updateOneUser(UUID userUuid, User newUser) {
+		Optional<User> user = userRepository.findById(userUuid);
 		if (user.isPresent()) {
 			User foundUser = user.get();
 			foundUser.setUsername(newUser.getUsername());
@@ -58,8 +59,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			return null;
 	}
 
-	public void deleteOneUser(Long userId) {
-		userRepository.deleteById(userId);
+	public void deleteOneUser(UUID userUuid) {
+		userRepository.deleteById(userUuid);
 
 	}
 
@@ -67,10 +68,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return userRepository.findByUsername(userName);
 	}
 
-	public Long getUserIdByUsernameOrEmail(String usernameOrEmail) {
+	public UUID getUserIdByUsernameOrEmail(String usernameOrEmail) {
 		User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
 				.orElseThrow(() -> new UsernameNotFoundException("User not exists by Username or Email"));
-		return user.getId();
+		return user.getUuid();
 	}
 
 }

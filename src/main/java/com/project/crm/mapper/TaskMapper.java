@@ -15,22 +15,24 @@ public class TaskMapper {
 
 	public TaskDTO toDTO(Task task) {
 		TaskDTO taskDTO = new TaskDTO();
-		taskDTO.setId(task.getId());
+		taskDTO.setId(task.getId()); // Bu Long kalabilir
 		taskDTO.setTitle(task.getTitle());
 		taskDTO.setDescription(task.getDescription());
 		taskDTO.setStatus(task.getStatus());
-		taskDTO.setAssignedToId(task.getAssignedTo().getId());
+		taskDTO.setAssignedToId(task.getAssignedTo().getUuid()); // Sadece userId UUID olacak
 		taskDTO.setAssignedToName(task.getAssignedTo().getUsername());
 		return taskDTO;
 	}
 
 	public Task toEntity(TaskDTO taskDTO) {
 		Task task = new Task();
-		task.setId(taskDTO.getId());
+		task.setId(taskDTO.getId()); // taskId Long kalabilir
 		task.setTitle(taskDTO.getTitle());
 		task.setDescription(taskDTO.getDescription());
 		task.setStatus(taskDTO.getStatus());
-		task.setAssignedTo(userRepository.findById(taskDTO.getAssignedToId()).orElse(null));
+		task.setAssignedTo(userRepository.findById(taskDTO.getAssignedToId()) // userId UUID olacak
+				.orElseThrow(() -> new RuntimeException("User not found")));
 		return task;
 	}
+
 }

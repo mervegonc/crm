@@ -18,15 +18,16 @@ public class InteractionMapper {
 	private UserRepository userRepository;
 
 	public InteractionDTO toDTO(Interaction interaction) {
-		return new InteractionDTO(interaction.getId(), interaction.getCustomer().getId(), interaction.getUser().getId(),
-				interaction.getInteractionType(), interaction.getNotes(), interaction.getDate());
+		return new InteractionDTO(interaction.getId(), interaction.getCustomer().getId(),
+				interaction.getUser().getUuid(), interaction.getInteractionType(), interaction.getNotes(),
+				interaction.getDate());
 	}
 
 	public Interaction toEntity(InteractionDTO interactionDTO) {
 		Interaction interaction = new Interaction();
 		interaction.setId(interactionDTO.getId());
 		interaction.setCustomer(customerRepository.findById(interactionDTO.getCustomerId()).orElse(null));
-		interaction.setUser(userRepository.findById(interactionDTO.getUserId()).orElse(null));
+		interaction.setUser(userRepository.findById(interactionDTO.getUserUuid()).orElse(null));
 		interaction.setInteractionType(interactionDTO.getInteractionType());
 		interaction.setNotes(interactionDTO.getNotes());
 		interaction.setDate(interactionDTO.getDate());

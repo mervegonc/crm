@@ -2,6 +2,7 @@ package com.project.crm.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.project.crm.entity.Interaction;
 
@@ -11,8 +12,6 @@ public interface InteractionService {
 
 	List<Interaction> findByCustomerId(Long customerId);
 
-	List<Interaction> findByUserId(Long userId);
-
 	List<Interaction> findByInteractionType(String interactionType);
 
 	List<Interaction> findAll();
@@ -20,4 +19,6 @@ public interface InteractionService {
 	Interaction save(Interaction interaction);
 
 	void deleteById(Long id);
+
+	List<Interaction> findByUserId(UUID userUuid);
 }

@@ -30,8 +30,8 @@ public class Interaction {
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "user_id", referencedColumnName = "uuid")
 	private User user;
 
 	@Column(name = "interaction_type", nullable = false)

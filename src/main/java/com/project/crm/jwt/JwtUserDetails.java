@@ -3,6 +3,7 @@ package com.project.crm.jwt;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,14 +18,14 @@ import lombok.Setter;
 @Setter
 public class JwtUserDetails implements UserDetails {
 
-	private Long id;
+	private UUID uuid;
 	private String username;
 	private String password;
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public JwtUserDetails(Long id, String username, String password,
+	public JwtUserDetails(UUID uuid, String username, String password,
 			Collection<? extends GrantedAuthority> authorities) {
-		this.id = id;
+		this.uuid = uuid;
 		this.username = username;
 		this.password = password;
 		this.authorities = authorities;
@@ -35,7 +36,7 @@ public class JwtUserDetails implements UserDetails {
 		user.getUserRoles().forEach(role -> {
 			authoritiesList.add(new SimpleGrantedAuthority(role.getName()));
 		});
-		return new JwtUserDetails(user.getId(), user.getUsername(), user.getPassword(), authoritiesList);
+		return new JwtUserDetails(user.getUuid(), user.getUsername(), user.getPassword(), authoritiesList);
 	}
 
 	@Override

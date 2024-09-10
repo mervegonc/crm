@@ -2,6 +2,7 @@ package com.project.crm.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,7 @@ public interface InteractionRepository extends JpaRepository<Interaction, Long> 
 
 	List<Interaction> findByCustomerId(Long customerId);
 
-	List<Interaction> findByUserId(Long userId);
+	List<Interaction> findByUserUuid(UUID uuid);
 
 	List<Interaction> findByInteractionType(String interactionType);
 

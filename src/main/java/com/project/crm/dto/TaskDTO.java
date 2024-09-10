@@ -1,5 +1,7 @@
 package com.project.crm.dto;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,6 @@ public class TaskDTO {
 	private String title;
 	private String description;
 	private String status;
-	private Long assignedToId;
+	private UUID assignedToId;
 	private String assignedToName;
 }

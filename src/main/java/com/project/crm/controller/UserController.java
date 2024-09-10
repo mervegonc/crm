@@ -1,6 +1,7 @@
 package com.project.crm.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,8 @@ public class UserController {
 
 	// ID'ye göre kullanıcı getir
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-		UserDTO user = userService.getUserById(id);
+	public ResponseEntity<UserDTO> getUserById(@PathVariable UUID uuid) {
+		UserDTO user = userService.getUserById(uuid);
 		return ResponseEntity.ok(user);
 	}
 
@@ -46,15 +47,15 @@ public class UserController {
 
 	// Kullanıcıyı güncelle
 	@PutMapping("/{id}")
-	public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-		UserDTO updatedUser = userService.updateUser(id, userDTO);
+	public ResponseEntity<UserDTO> updateUser(@PathVariable UUID uuid, @RequestBody UserDTO userDTO) {
+		UserDTO updatedUser = userService.updateUser(uuid, userDTO);
 		return ResponseEntity.ok(updatedUser);
 	}
 
 	// Kullanıcıyı sil
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-		userService.deleteUser(id);
+	public ResponseEntity<Void> deleteUser(@PathVariable UUID uuid) {
+		userService.deleteUser(uuid);
 		return ResponseEntity.noContent().build();
 	}
 }

@@ -32,10 +32,10 @@ public class AuthController {
 	public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
 		try {
 			String token = userService.login(loginDto);
-			Long userId = userService.getUserIdByUsername(loginDto.getUsernameOrEmail());
+			String userUuid = userService.getUserIdByUsername(loginDto.getUsernameOrEmail());
 			JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
 			jwtAuthResponse.setAccessToken(token);
-			jwtAuthResponse.setUserId(userId);
+			jwtAuthResponse.setUserUuid(userUuid);
 			return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
 		} catch (UsernameNotFoundException e) {
 			return new ResponseEntity<>("This username or email doesn't exist, please sign up first.",

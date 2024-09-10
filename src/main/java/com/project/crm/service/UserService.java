@@ -1,6 +1,7 @@
 package com.project.crm.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.project.crm.dto.LoginDto;
 import com.project.crm.dto.SignupDto;
@@ -17,19 +18,11 @@ public interface UserService {
 
 	boolean isUserExist(String username);
 
-	public User getOneUserById(Long userId);
-
 	public List<User> getAllUsers();
 
 	public User saveOneUser(User newUser);
 
-	public User updateOneUser(Long userId, User newUser);
-
-	User updateInfo(Long userId, User newUserInfo);
-
-	public void deleteOneUser(Long userId);
-
-	Long getUserIdByUsername(String usernameOrEmail);
+	String getUserIdByUsername(String usernameOrEmail);
 
 	List<User> searchByUsername(String username);
 
@@ -37,21 +30,26 @@ public interface UserService {
 
 	User findByUsernameOrEmail(String usernameOrEmail);
 
-	User findById(Long userId);
-
 	// Tüm kullanıcıları listele
 	List<UserDTO> getAllUser();
-
-	// ID'ye göre kullanıcı getir
-	UserDTO getUserById(Long id);
 
 	// Yeni kullanıcı ekle
 	UserDTO createUser(UserDTO userDTO);
 
-	// Kullanıcıyı güncelle
-	UserDTO updateUser(Long id, UserDTO userDTO);
+	User getOneUserById(UUID userUuid);
 
-	// Kullanıcıyı sil
-	void deleteUser(Long id);
+	User updateOneUser(UUID userUuid, User newUser);
+
+	User updateInfo(UUID userUuid, User newUserInfo);
+
+	void deleteOneUser(UUID userUuid);
+
+	User findById(UUID userUuid);
+
+	UserDTO getUserById(UUID uuid);
+
+	UserDTO updateUser(UUID uuid, UserDTO userDTO);
+
+	void deleteUser(UUID uuid);
 
 }

@@ -3,6 +3,7 @@ package com.project.crm.service.impl;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +74,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Long getUserIdByUsername(String usernameOrEmail) {
+	public String getUserIdByUsername(String usernameOrEmail) {
 		User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
-		return user.getId();
+
+		return user.getUuid().toString(); // Ensure you convert the UUID to a String
 	}
 
 	@Override
@@ -127,8 +129,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getOneUserById(Long userId) {
-		return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+	public User getOneUserById(UUID userUuid) {
+		return userRepository.findById(userUuid).orElseThrow(() -> new RuntimeException("User not found"));
 	}
 
 	@Override
@@ -137,8 +139,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User updateOneUser(Long userId, User newUser) {
-		User existingUser = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+	public User updateOneUser(UUID userUuid, User newUser) {
+		User existingUser = userRepository.findById(userUuid).orElseThrow(() -> new RuntimeException("User not found"));
 		existingUser.setUsername(newUser.getUsername());
 		existingUser.setEmail(newUser.getEmail());
 		existingUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
@@ -147,8 +149,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User updateInfo(Long userId, User newUserInfo) {
-		User existingUser = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+	public User updateInfo(UUID userUuid, User newUserInfo) {
+		User existingUser = userRepository.findById(userUuid).orElseThrow(() -> new RuntimeException("User not found"));
 		existingUser.setUsername(newUserInfo.getUsername());
 		existingUser.setEmail(newUserInfo.getEmail());
 		existingUser.setPassword(passwordEncoder.encode(newUserInfo.getPassword()));
@@ -156,8 +158,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteOneUser(Long userId) {
-		userRepository.deleteById(userId);
+	public void deleteOneUser(UUID userUuid) {
+		userRepository.deleteById(userUuid);
 	}
 
 	@Override
@@ -171,23 +173,23 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findById(Long userId) {
-		return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+	public User findById(UUID userUuid) {
+		return userRepository.findById(userUuid).orElseThrow(() -> new RuntimeException("User not found"));
 	}
 
 	@Override
 	public List<UserDTO> getAllUser() {
 		return userRepository.findAll().stream()
-				.map(user -> new UserDTO(user.getId(), user.getUsername(), user.getEmail(),
+				.map(user -> new UserDTO(user.getUuid(), user.getUsername(), user.getEmail(),
 						user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toSet())))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public UserDTO getUserById(Long id) {
-		User user = userRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-		return new UserDTO(user.getId(), user.getUsername(), user.getEmail(),
+	public UserDTO getUserById(UUID uuid) {
+		User user = userRepository.findById(uuid)
+				.orElseThrow(() -> new RuntimeException("User not found with id: " + uuid));
+		return new UserDTO(user.getUuid(), user.getUsername(), user.getEmail(),
 				user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toSet()));
 	}
 
@@ -200,30 +202,30 @@ public class UserServiceImpl implements UserService {
 		// user.setRoles(...);
 
 		User savedUser = userRepository.save(user);
-		return new UserDTO(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(),
+		return new UserDTO(savedUser.getUuid(), savedUser.getUsername(), savedUser.getEmail(),
 				savedUser.getRoles().stream().map(role -> role.getName()).collect(Collectors.toSet()));
 	}
 
 	@Override
-	public UserDTO updateUser(Long id, UserDTO userDTO) {
-		User user = userRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+	public UserDTO updateUser(UUID uuid, UserDTO userDTO) {
+		User user = userRepository.findById(uuid)
+				.orElseThrow(() -> new RuntimeException("User not found with id: " + uuid));
 		user.setUsername(userDTO.getUsername());
 		user.setEmail(userDTO.getEmail());
 		// Roller güncellenmeli
 		// user.setRoles(...);
 
 		User updatedUser = userRepository.save(user);
-		return new UserDTO(updatedUser.getId(), updatedUser.getUsername(), updatedUser.getEmail(),
+		return new UserDTO(updatedUser.getUuid(), updatedUser.getUsername(), updatedUser.getEmail(),
 				updatedUser.getRoles().stream().map(role -> role.getName()).collect(Collectors.toSet()));
 	}
 
 	@Override
-	public void deleteUser(Long id) {
-		if (!userRepository.existsById(id)) {
-			throw new RuntimeException("User not found with id: " + id);
+	public void deleteUser(UUID uuid) {
+		if (!userRepository.existsById(uuid)) {
+			throw new RuntimeException("User not found with uuid: " + uuid);
 		}
-		userRepository.deleteById(id);
+		userRepository.deleteById(uuid);
 	}
 
 }

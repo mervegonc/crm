@@ -13,6 +13,6 @@ public class JwtAuthResponse {
 
 	private String accessToken;
 	private String tokenType = "Bearer";
-	private Long userId; // UserId alanı eklendi
+	private String userUuid; // UserId alanı eklendi
 
 }

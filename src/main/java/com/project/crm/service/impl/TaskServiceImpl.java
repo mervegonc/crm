@@ -2,6 +2,7 @@ package com.project.crm.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,8 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public List<Task> findByAssignedToId(Long userId) {
-		return taskRepository.findByAssignedToId(userId);
+	public List<Task> findByAssignedToId(UUID uuid) {
+		return taskRepository.findByAssignedToUuid(uuid);
 	}
 
 	@Override

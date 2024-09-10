@@ -2,6 +2,7 @@ package com.project.crm.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,8 @@ public class InteractionServiceImpl implements InteractionService {
 	}
 
 	@Override
-	public List<Interaction> findByUserId(Long userId) {
-		return interactionRepository.findByUserId(userId);
+	public List<Interaction> findByUserId(UUID uuid) {
+		return interactionRepository.findByUserUuid(uuid);
 	}
 
 	@Override
