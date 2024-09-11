@@ -1,6 +1,7 @@
 package com.project.crm.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class CompanyController {
 
 	// ID'ye göre şirket getir
 	@GetMapping("/{id}")
-	public ResponseEntity<CompanyDTO> getCompanyById(@PathVariable Long id) {
+	public ResponseEntity<CompanyDTO> getCompanyById(@PathVariable UUID id) {
 		return companyService.findById(id).map(companyMapper::toDTO).map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
@@ -52,7 +53,7 @@ public class CompanyController {
 
 	// Şirketi güncelle
 	@PutMapping("/{id}")
-	public ResponseEntity<CompanyDTO> updateCompany(@PathVariable Long id, @RequestBody CompanyDTO companyDTO) {
+	public ResponseEntity<CompanyDTO> updateCompany(@PathVariable UUID id, @RequestBody CompanyDTO companyDTO) {
 		Company company = companyMapper.toEntity(companyDTO);
 		Company updatedCompany = companyService.updateCompany(id, company);
 		if (updatedCompany != null) {
@@ -64,7 +65,7 @@ public class CompanyController {
 
 	// Şirketi sil
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteCompany(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteCompany(@PathVariable UUID id) {
 		companyService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}

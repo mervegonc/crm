@@ -14,9 +14,12 @@ public class CompanyMapper {
 
 	public Company toEntity(CompanyDTO companyDTO) {
 		Company company = new Company();
-		company.setId(companyDTO.getId());
+		if (companyDTO.getId() != null) { // Eğer update için varsa, set et
+			company.setId(companyDTO.getId());
+		}
 		company.setName(companyDTO.getName());
 		company.setCompanyCode(companyDTO.getCompanyCode());
 		return company;
 	}
+
 }

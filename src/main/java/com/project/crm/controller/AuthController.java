@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.crm.dto.CompanySignupDTO;
 import com.project.crm.dto.LoginDto;
 import com.project.crm.dto.SignupDto;
 import com.project.crm.dto.request.PasswordResetRequest;
@@ -16,6 +17,7 @@ import com.project.crm.dto.response.JwtAuthResponse;
 import com.project.crm.dto.response.JwtSignupResponse;
 import com.project.crm.entity.User;
 import com.project.crm.jwt.JwtTokenProvider;
+import com.project.crm.service.CompanyService;
 import com.project.crm.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ public class AuthController {
 
 	private final UserService userService;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final CompanyService companyService;
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
@@ -42,6 +45,20 @@ public class AuthController {
 					HttpStatus.UNAUTHORIZED);
 		} catch (Exception e) {
 			return new ResponseEntity<>("Invalid username or password.", HttpStatus.UNAUTHORIZED);
+		}
+	}
+
+	@PostMapping("/signup/company")
+	public ResponseEntity<JwtSignupResponse> companySignup(@RequestBody CompanySignupDTO companySignupDto) {
+		try {
+			companyService.signupCompany(companySignupDto);
+			JwtSignupResponse jwtSignupResponse = new JwtSignupResponse();
+			jwtSignupResponse.setMessage("Company registered successfully!");
+			return new ResponseEntity<>(jwtSignupResponse, HttpStatus.CREATED);
+		} catch (RuntimeException e) {
+			JwtSignupResponse response = new JwtSignupResponse();
+			response.setMessage(e.getMessage()); // Return specific message in case of conflict
+			return new ResponseEntity<>(response, HttpStatus.CONFLICT);
 		}
 	}
 

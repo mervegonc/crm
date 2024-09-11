@@ -1,5 +1,7 @@
 package com.project.crm.dto;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompanyDTO {
-	private Long id;
+	private UUID id;
 	private String name;
 	private String companyCode;
 }
