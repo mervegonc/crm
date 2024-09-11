@@ -2,17 +2,22 @@ package com.project.crm.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.crm.dto.CompanySignupDTO;
 import com.project.crm.entity.Company;
 import com.project.crm.entity.FinancialInfo;
+import com.project.crm.entity.Role;
 import com.project.crm.entity.Status;
+import com.project.crm.entity.User;
 import com.project.crm.repository.CompanyRepository;
 import com.project.crm.repository.FinancialInfoRepository;
+import com.project.crm.repository.RoleRepository;
 import com.project.crm.repository.StatusRepository;
 import com.project.crm.repository.UserRepository;
 import com.project.crm.service.CompanyService;
@@ -26,49 +31,68 @@ public class CompanyServiceImpl implements CompanyService {
 	private final UserRepository userRepository;
 	private final StatusRepository statusRepository;
 	private final FinancialInfoRepository financialInfoRepository;
+	private final RoleRepository roleRepository;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	public CompanyServiceImpl(CompanyRepository companyRepository, UserService userService,
 			UserRepository userRepository, StatusRepository statusRepository,
-			FinancialInfoRepository financialInfoRepository) {
+			FinancialInfoRepository financialInfoRepository, RoleRepository roleRepository) {
 		this.companyRepository = companyRepository;
 		this.userService = userService;
 		this.userRepository = userRepository;
 		this.statusRepository = statusRepository;
 		this.financialInfoRepository = financialInfoRepository;
+		this.roleRepository = roleRepository;
 	}
 
 	@Override
 	public void signupCompany(CompanySignupDTO companySignupDTO) {
-		// Şirket kodu mevcutsa hata fırlat
+		// Check if the company already exists
 		if (companyRepository.existsByCompanyCode(companySignupDTO.getCompanyCode())) {
 			throw new RuntimeException("Company already exists");
 		}
 
-		// Status kaydetme
+		// Save status
 		Status status = new Status();
 		status.setActive(companySignupDTO.getStatus().isActive());
 		status.setOperationHours(companySignupDTO.getStatus().getOperationHours());
 		status.setStatusHistory(companySignupDTO.getStatus().getStatusHistory());
-		statusRepository.save(status); // Status önce kaydediliyor
+		statusRepository.save(status);
 
-		// FinancialInfo kaydetme
+		// Save financial info
 		FinancialInfo financialInfo = new FinancialInfo();
 		financialInfo.setAnnualRevenue(companySignupDTO.getFinancialInfo().getAnnualRevenue());
 		financialInfo.setBudget(companySignupDTO.getFinancialInfo().getBudget());
 		financialInfo.setTaxInfo(companySignupDTO.getFinancialInfo().getTaxInfo());
-		financialInfoRepository.save(financialInfo); // FinancialInfo önce kaydediliyor
+		financialInfoRepository.save(financialInfo);
 
-		// Yeni şirket oluştur ve kaydet
+		// Create and save company
 		Company company = new Company();
 		company.setName(companySignupDTO.getName());
 		company.setPhoneNumber(companySignupDTO.getPhoneNumber());
 		company.setAddress(companySignupDTO.getAddress());
 		company.setCompanyCode(companySignupDTO.getCompanyCode());
-		company.setFinancialInfo(financialInfo); // Kaydedilen financialInfo ekleniyor
-		company.setStatus(status); // Kaydedilen status ekleniyor
+		company.setFinancialInfo(financialInfo);
+		company.setStatus(status);
+		companyRepository.save(company);
 
-		companyRepository.save(company); // Şirket kaydediliyor
+		// Create and save admin user with encoded password
+		User admin = new User();
+		admin.setUsername(companySignupDTO.getEmail());
+		admin.setEmail(companySignupDTO.getEmail());
+		admin.setPassword(passwordEncoder.encode(companySignupDTO.getPassword())); // Encode password
+		admin.setCompany(company);
+
+		// Fetch the ROLE_ADMIN role
+		Role adminRole = roleRepository.findByName("ROLE_ADMIN")
+				.orElseThrow(() -> new RuntimeException("Admin role not found"));
+
+		// Assign admin role to the user
+		admin.setRoles(Optional.ofNullable(Set.of(adminRole)));
+
+		userRepository.save(admin);
 	}
 
 	@Override
