@@ -56,11 +56,6 @@ public class JwtTokenProvider {
 
 	}
 
-	public String getUsernameFromJWT(String jwt) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	// validate JWT token
 
 }

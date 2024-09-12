@@ -74,6 +74,10 @@ public class User {
 	@Column(name = "last_login_at")
 	private LocalDateTime lastLoginAt;
 
+	@ManyToOne
+	@JoinColumn(name = "employee_id")
+	private Employee employee;
+
 	public LocalDateTime getLastLoginAt() {
 		return lastLoginAt;
 	}
@@ -101,4 +105,9 @@ public class User {
 	public Set<Role> getRoles() {
 		return this.userRoles.stream().map(UserRole::getRole).collect(Collectors.toSet());
 	}
+
+	public Employee getEmployee() {
+		return this.employee; // Assuming you have a field 'employee' in User class.
+	}
+
 }

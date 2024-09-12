@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.crm.dto.CompanySignupDTO;
+import com.project.crm.dto.EmployeeSignupDTO;
 import com.project.crm.dto.LoginDto;
 import com.project.crm.dto.SignupDto;
 import com.project.crm.dto.request.PasswordResetRequest;
@@ -17,7 +18,9 @@ import com.project.crm.dto.response.JwtAuthResponse;
 import com.project.crm.dto.response.JwtSignupResponse;
 import com.project.crm.entity.User;
 import com.project.crm.jwt.JwtTokenProvider;
+import com.project.crm.repository.EmployeeRepository;
 import com.project.crm.service.CompanyService;
+import com.project.crm.service.EmployeeService;
 import com.project.crm.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +33,8 @@ public class AuthController {
 	private final UserService userService;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final CompanyService companyService;
+	private final EmployeeService employeeService;
+	private final EmployeeRepository employeeRepository;
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
@@ -77,6 +82,16 @@ public class AuthController {
 		JwtSignupResponse jwtSignupResponse = new JwtSignupResponse();
 		jwtSignupResponse.setMessage("User registered successfully!");
 		return new ResponseEntity<>(jwtSignupResponse, HttpStatus.CREATED);
+	}
+
+	@PostMapping("/signup/employee")
+	public ResponseEntity<?> employeeSignup(@RequestBody EmployeeSignupDTO signupDto) {
+		try {
+			employeeService.signupEmployee(signupDto);
+			return new ResponseEntity<>("Employee registered successfully", HttpStatus.CREATED);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PostMapping("/forgotpassword")

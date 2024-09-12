@@ -45,16 +45,15 @@ public class SpringSecurityConfig {
 
 		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests((authorize) -> {
 
-			authorize.requestMatchers("/api/auth/signin/**").permitAll().requestMatchers("/api/auth/forgotpassword")
-					.permitAll().requestMatchers("/api/auth/signup/**").permitAll()
-					.requestMatchers("/api/auth/signin/company").permitAll().requestMatchers("/api/auth/signup/company")
-					.permitAll();
-			authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-			authorize.requestMatchers(HttpMethod.GET, "/api/user/**");
+			authorize.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/auth/forgotpassword")
+					.permitAll().requestMatchers("/api/admin/**").permitAll();
 
-			authorize.requestMatchers(HttpMethod.POST, "/api/article/create");
+			authorize.requestMatchers(HttpMethod.GET, "/api/**");
+			authorize.requestMatchers(HttpMethod.GET, "/api/**");
 
-			authorize.requestMatchers(HttpMethod.PUT, "/api/post/**");
+			authorize.requestMatchers(HttpMethod.POST, "/api/**");
+
+			authorize.requestMatchers(HttpMethod.PUT, "/api/**");
 
 			authorize.requestMatchers(HttpMethod.DELETE, "/api/like/**");
 

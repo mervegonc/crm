@@ -3,9 +3,11 @@ package com.project.crm.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.project.crm.dto.EmployeeSignupDTO;
 import com.project.crm.dto.LoginDto;
 import com.project.crm.dto.SignupDto;
 import com.project.crm.dto.UserDTO;
+import com.project.crm.entity.Employee;
 import com.project.crm.entity.User;
 
 public interface UserService {
@@ -51,5 +53,19 @@ public interface UserService {
 	UserDTO updateUser(UUID uuid, UserDTO userDTO);
 
 	void deleteUser(UUID uuid);
+
+	void signupAndAssignRole(String username, String email, String password, String string);
+
+	void signupAndAssignRole(EmployeeSignupDTO signupDto, String roleName);
+
+	User findByUsername(String username);
+
+	void save(User user);
+
+	User findByEmployee(Employee employee);
+
+	void changeRole(User user, String string);
+
+	void approveEmployee(UUID employeeId);
 
 }

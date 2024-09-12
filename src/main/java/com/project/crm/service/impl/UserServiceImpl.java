@@ -1,5 +1,6 @@
 package com.project.crm.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -15,12 +16,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.crm.dto.EmployeeSignupDTO;
 import com.project.crm.dto.LoginDto;
 import com.project.crm.dto.SignupDto;
 import com.project.crm.dto.UserDTO;
+import com.project.crm.entity.Employee;
 import com.project.crm.entity.Role;
 import com.project.crm.entity.User;
+import com.project.crm.entity.UserRole;
 import com.project.crm.jwt.JwtTokenProvider;
+import com.project.crm.repository.EmployeeRepository;
 import com.project.crm.repository.RoleRepository;
 import com.project.crm.repository.UserRepository;
 import com.project.crm.service.UserService;
@@ -32,45 +37,52 @@ public class UserServiceImpl implements UserService {
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final EmployeeRepository employeeRepository;
 
 	@Autowired
 	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-			PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
+			PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, EmployeeRepository employeeRepository) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.jwtTokenProvider = jwtTokenProvider;
+		this.employeeRepository = employeeRepository;
 	}
 
 	@Override
 	public String login(LoginDto loginDto) {
-		// Check if the user exists by username or email
 		Optional<User> userOptional = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(),
 				loginDto.getUsernameOrEmail());
 
-		// If the user doesn't exist
 		if (userOptional.isEmpty()) {
-			if (loginDto.getUsernameOrEmail().contains("@")) {
-				throw new UsernameNotFoundException("This email doesn't exist, please sign up first.");
-			} else {
-				throw new UsernameNotFoundException("This username doesn't exist, please sign up first.");
-			}
+			throw new UsernameNotFoundException("This username or email doesn't exist.");
 		}
 
-		// Get the user from the optional
 		User user = userOptional.get();
 
-		// If the password is incorrect
-		if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-			throw new UsernameNotFoundException("Please enter the correct email or username.");
+		// Check if user has 'ROLE_PENDING_EMPLOYEE'
+		if (user.getRoles().contains(roleRepository.findByName("ROLE_PENDING_EMPLOYEE").get())) {
+			throw new RuntimeException("Your account has not been approved by an admin yet.");
 		}
 
-		// If everything is correct, authenticate and generate a token
+		// Check password
+		if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+			throw new RuntimeException("Invalid username or password.");
+		}
+
 		Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null,
 				user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName()))
 						.collect(Collectors.toList()));
 
 		return jwtTokenProvider.generateToken(authentication);
+	}
+
+	@Override
+	public void approveEmployee(UUID employeeId) {
+		Employee employee = employeeRepository.findById(employeeId)
+				.orElseThrow(() -> new RuntimeException("Employee not found"));
+		employee.setStatus("APPROVED"); // Change status to APPROVED
+		employeeRepository.save(employee);
 	}
 
 	@Override
@@ -226,6 +238,63 @@ public class UserServiceImpl implements UserService {
 			throw new RuntimeException("User not found with uuid: " + uuid);
 		}
 		userRepository.deleteById(uuid);
+	}
+
+	@Override
+	public void signupAndAssignRole(String username, String email, String password, String roleName) {
+		User user = new User();
+		user.setUsername(username);
+		user.setEmail(email);
+		user.setPassword(passwordEncoder.encode(password));
+		user.setActive(true);
+
+		// Find and assign role
+		Role role = roleRepository.findByName(roleName).orElseThrow(() -> new RuntimeException("Role not found!"));
+		user.setRoles(Optional.of(Collections.singleton(role))); // No Optional here
+
+		userRepository.save(user);
+	}
+
+	@Override
+	public void signupAndAssignRole(EmployeeSignupDTO signupDto, String roleName) {
+		// Create a new user object
+		User user = new User();
+		user.setUsername(signupDto.getUsername());
+		user.setEmail(signupDto.getEmail());
+		user.setPassword(passwordEncoder.encode(signupDto.getPassword()));
+		user.setActive(true);
+
+		// Fetch the role from the database and create the UserRole
+		Role role = roleRepository.findByName(roleName).orElseThrow(() -> new RuntimeException("Role not found!"));
+		UserRole userRole = new UserRole(user, role);
+
+		// Assign the role to the user
+		user.setUserRoles(List.of(userRole));
+
+		// Save the user to the repository
+		userRepository.save(user);
+	}
+
+	@Override
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found!"));
+	}
+
+	@Override
+	public void save(User user) {
+		userRepository.save(user);
+	}
+
+	@Override
+	public User findByEmployee(Employee employee) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void changeRole(User user, String string) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

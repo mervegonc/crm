@@ -1,5 +1,7 @@
 package com.project.crm.entity;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,4 +35,19 @@ public class FinancialInfo {
 
 	@OneToOne(mappedBy = "financialInfo")
 	private Company company;
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		FinancialInfo financialInfo = (FinancialInfo) obj;
+		return Objects.equals(id, financialInfo.id);
+	}
 }

@@ -1,6 +1,7 @@
 package com.project.crm.entity;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
@@ -89,6 +90,22 @@ public class Company {
 		status.setOperationHours(status2.getOperationHours());
 		status.setStatusHistory(status2.getStatusHistory());
 		this.status = status;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, companyCode);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null || getClass() != obj.getClass())
+			return false;
+		Company company = (Company) obj;
+		return Objects.equals(id, company.id) && Objects.equals(name, company.name)
+				&& Objects.equals(companyCode, company.companyCode);
 	}
 
 }
