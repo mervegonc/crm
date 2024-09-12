@@ -1,6 +1,7 @@
 package com.project.crm.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -53,7 +54,7 @@ public class User {
 	private Company company;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<UserRole> userRoles;
+	private Set<UserRole> userRoles = new HashSet<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Interaction> interactions;
@@ -98,7 +99,7 @@ public class User {
 	}
 
 	public void setRoles(Optional<Set<Role>> roles) {
-		this.userRoles = roles.orElse(Set.of()).stream().map(role -> new UserRole(this, role))
+		this.userRoles = (Set<UserRole>) roles.orElse(Set.of()).stream().map(role -> new UserRole(this, role))
 				.collect(Collectors.toList());
 	}
 

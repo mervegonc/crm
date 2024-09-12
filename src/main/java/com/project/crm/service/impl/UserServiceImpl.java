@@ -269,7 +269,7 @@ public class UserServiceImpl implements UserService {
 		UserRole userRole = new UserRole(user, role);
 
 		// Assign the role to the user
-		user.setUserRoles(List.of(userRole));
+		user.setUserRoles((Set<UserRole>) List.of(userRole));
 
 		// Save the user to the repository
 		userRepository.save(user);

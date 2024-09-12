@@ -90,7 +90,13 @@ public class AuthController {
 			employeeService.signupEmployee(signupDto);
 			return new ResponseEntity<>("Employee registered successfully", HttpStatus.CREATED);
 		} catch (RuntimeException e) {
+			// Daha fazla bilgi için log ekle
+			e.printStackTrace();
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			// Diğer hataları da yakala
+			e.printStackTrace();
+			return new ResponseEntity<>("Unknown error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
